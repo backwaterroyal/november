@@ -8,8 +8,10 @@
     .md-path__list > .md-path__item:first-child { display: none; }
     .md-path__list > .md-path__item:nth-child(2)::before { content: none; }
 
-    /* Hide the primary navigation sidebar globally */
-    .md-sidebar--primary { display: none; }
+    /* Hide the primary navigation sidebar on desktop only; keep it for mobile drawer */
+    @media screen and (min-width: 76.25em) {
+      .md-sidebar--primary { display: none; }
+    }
   </style>
 {% endblock %}
 {% block content %}
