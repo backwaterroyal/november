@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block extrahead %}
   {{ super() }}
-  {% if page.meta and page.meta.date %}
-    <meta name="date" content="{{ page.meta.date }}">
+  {% if page.meta and page.meta.modified %}
+    <meta name="modified" content="{{ page.meta.modified }}">
   {% endif %}
   <style>
     .md-path__list > .md-path__item:first-child { display: none; }
