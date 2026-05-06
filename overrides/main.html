@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+  {{ super() }}
+  <style>
+    .md-path__list > .md-path__item:first-child {
+      display: none;
+    }
+    .md-path__list > .md-path__item:nth-child(2)::before {
+      content: none;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  {{ super() }}
+  {% if page and page.title %}
+    <script>
+      (function() {
+        var list = document.querySelector(".md-path__list");
+        if (!list) return;
+        if (list.dataset.currentAppended) return;
+
+        var currentTitle = {{ page.title | tojson }};
+        var items = list.querySelectorAll(".md-path__item");
+
+        // Skip if the last crumb is already this page (section index case)
+        if (items.length > 0 &&
+            items[items.length - 1].textContent.trim() === currentTitle) {
+          list.dataset.currentAppended = "1";
+          return;
+        }
+
+        var li = document.createElement("li");
+        li.className = "md-path__item";
+        li.textContent = currentTitle;
+        list.appendChild(li);
+        list.dataset.currentAppended = "1";
+      })();
+    </script>
+  {% endif %}
+{% endblock %}

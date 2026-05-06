@@ -1,0 +1,12 @@
+{% extends "main.html" %}
+
+{% block extrahead %}
+  {{ super() }}
+  <style>
+    /* Hide the H1 page title on section index pages */
+    .md-content .md-typeset > h1:first-child,
+    .md-content__button {
+      display: none;
+    }
+  </style>
+{% endblock %}
