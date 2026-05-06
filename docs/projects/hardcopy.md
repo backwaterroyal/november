@@ -8,7 +8,7 @@ tags:
   - tools
   - architecture
 share: true
-modified: 2026-05-06T15:30
+modified: 2026-05-06T15:41
 created: 2026-05-06T14:24
 ---
 [:fontawesome-brands-github:](https://github.com/backwaterroyal/hardcopy)
