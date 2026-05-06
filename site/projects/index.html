@@ -304,8 +304,6 @@
       
         
       
-        
-      
     
     
     
@@ -374,33 +372,6 @@
     
   
   hardcopy
-
-    
-  </span>
-  
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="./mooshroom/" class="md-nav__link">
-        
-  
-  
-  <span class="md-ellipsis">
-    
-  
-  mooshroom
 
     
   </span>
@@ -572,16 +543,24 @@
           try {
             const doc = new DOMParser().parseFromString(await (await fetch(e.url)).text(), "text/html");
             e.description = doc.querySelector('meta[name="description"]')?.content ?? "";
-            e.date = doc.querySelector('meta[name="date"]')?.content ?? "";
+            e.modified = doc.querySelector('meta[name="modified"]')?.content ?? "";
             e.tags = [...new Set([...doc.querySelectorAll(".md-tag")].map(t => t.textContent.trim()).filter(Boolean))];
           } catch {
-            e.description = ""; e.date = ""; e.tags = [];
+            e.description = ""; e.modified = ""; e.tags = [];
           }
         }));
 
+        const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+        const fmt = s => {
+          const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(s);
+          return m ? `${months[+m[2]-1]} ${+m[3]}, ${m[1]}` : s;
+        };
+
+        entries.sort((a, b) => (b.modified || "").localeCompare(a.modified || ""));
+
         ul.innerHTML = entries.map(e => `
           <li>
-            <div><a href="${esc(e.url)}">${esc(e.title)}</a>${e.date ? ` <span class="md-section-index__date">[${esc(e.date)}]</span>` : ""}</div>
+            <div><a href="${esc(e.url)}">${esc(e.title)}</a>${e.modified ? ` <code class="md-section-index__date">${esc(fmt(e.modified))}</code>` : ""}</div>
             ${e.description ? `<p class="md-section-index__description">${esc(e.description)}</p>` : ""}
             ${e.tags.length ? `<div class="md-section-index__tags">${e.tags.map(t => `<code>${esc(t)}</code>`).join(" ")}</div>` : ""}
           </li>`).join("");
