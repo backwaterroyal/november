@@ -1,6 +1,6 @@
 ---
 template: home.html
-title: Info
+title: Me
 ---
 
 # N
