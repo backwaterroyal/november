@@ -293,9 +293,9 @@ scheme = "slate"
 # ----------------------------------------------------------------------------
 # The "extra" section contains miscellaneous settings.
 # ----------------------------------------------------------------------------
-[[project.extra.social]]
-icon = "fontawesome/brands/github"
-link = "https://github.com/backwaterroyal/"
+#[[project.extra.social]]
+#icon = "fontawesome/brands/github"
+#link = "https://github.com/backwaterroyal/"
 
 # ----------------------------------------------------------------------------
 # In this section you can configure the Markdown extensions that are used when
