@@ -3,10 +3,66 @@
 {% block extrahead %}
   {{ super() }}
   <style>
-    /* Hide the H1 page title on section index pages */
     .md-content .md-typeset > h1:first-child,
-    .md-content__button {
-      display: none;
-    }
+    .md-content__button { display: none; }
+    .md-section-index ul { list-style: disc; padding-left: 1.5em; }
+    .md-section-index li { margin-bottom: 1em; }
+    .md-section-index__date { color: var(--md-default-fg-color--light); margin-left: 0.4em; }
+    .md-section-index__description { margin: 0.2em 0; }
+    .md-section-index__tags code { margin-right: 0.3em; }
   </style>
+{% endblock %}
+
+{% block content %}
+  {{ super() }}
+
+  <div class="md-typeset md-section-index"><ul></ul></div>
+
+  <script>
+    (function() {
+      const esc = s => s.replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+      async function build() {
+        const ul = document.querySelector(".md-section-index ul");
+        if (!ul) return;
+
+        const here = location.pathname;
+        const section = here.endsWith("/") ? here : here + "/";
+        const seen = new Set();
+        const entries = [];
+
+        for (const a of document.querySelectorAll(".md-sidebar a[href], .md-nav a[href]")) {
+          const path = new URL(a.href, location.origin).pathname;
+          const rest = path.slice(section.length).replace(/\/$/, "");
+          if (path === here || !path.startsWith(section) || !rest || rest.includes("/") || seen.has(path)) continue;
+          seen.add(path);
+          entries.push({ url: a.href, title: a.textContent.trim() });
+        }
+
+        await Promise.all(entries.map(async e => {
+          try {
+            const doc = new DOMParser().parseFromString(await (await fetch(e.url)).text(), "text/html");
+            e.description = doc.querySelector('meta[name="description"]')?.content ?? "";
+            e.date = doc.querySelector('meta[name="date"]')?.content ?? "";
+            e.tags = [...new Set([...doc.querySelectorAll(".md-tag")].map(t => t.textContent.trim()).filter(Boolean))];
+          } catch {
+            e.description = ""; e.date = ""; e.tags = [];
+          }
+        }));
+
+        ul.innerHTML = entries.map(e => `
+          <li>
+            <div><a href="${esc(e.url)}">${esc(e.title)}</a>${e.date ? ` <span class="md-section-index__date">[${esc(e.date)}]</span>` : ""}</div>
+            ${e.description ? `<p class="md-section-index__description">${esc(e.description)}</p>` : ""}
+            ${e.tags.length ? `<div class="md-section-index__tags">${e.tags.map(t => `<code>${esc(t)}</code>`).join(" ")}</div>` : ""}
+          </li>`).join("");
+      }
+
+      if (typeof document$ !== "undefined" && document$.subscribe) {
+        document$.subscribe(build);
+      } else {
+        document.addEventListener("DOMContentLoaded", build);
+      }
+    })();
+  </script>
 {% endblock %}
