@@ -17,12 +17,12 @@ i like reading and writing and occasionally thinking
 
 - [Hardcopy](projects/hardcopy.md)
 
-    Ebook automation via Hardcover.app
+    ebook automation via Hardcover.app
 
-    `compsci` `libsci` `tools`
+    `compsci` `libsci` `linux-isos`
 
-- Another project i have yet to make
+- [Dutchman](projects/dutchman.md)
 
-    probably cool though
+    simple deadman's switch deployed from GitHub
 
-    `tag1` `tag2`
+    `compsci` `sociotechnical`
